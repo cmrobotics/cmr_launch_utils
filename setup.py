@@ -2,7 +2,7 @@ import os
 from setuptools import setup, find_packages
 from glob import glob
 
-package_name = 'serena_launch_utils'
+package_name = 'cmr_launch_utils'
 
 setup(
     name=package_name,

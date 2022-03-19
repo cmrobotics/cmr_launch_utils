@@ -5,7 +5,7 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 from launch_ros.actions import Node
 
-from serena_launch_utils.substitutions import PackageShareDirectorySubstitution, IfElseSubstitution
+from cmr_launch_utils.substitutions import PackageShareDirectorySubstitution, IfElseSubstitution
 
 
 def generate_launch_description():
