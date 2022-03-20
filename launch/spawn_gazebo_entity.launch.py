@@ -5,7 +5,7 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 from launch_ros.actions import Node
 
-from cmr_launch_utils.substitutions import PackageShareDirectorySubstitution, IfElseSubstitution
+from cmr_launch_utils.substitutions import PackageShareDirectorySubstitution, IfElseSubstitution, TextFormatSubstitution
 
 
 def generate_launch_description():
@@ -27,7 +27,10 @@ def generate_launch_description():
             package_root_directory,
             "models",
             model_name,
-            'model.sdf'
+            TextFormatSubstitution(
+                fmt="model.{}",
+                substitutions=[LaunchConfiguration("file_extension")]
+            )
         ]
     )
 
@@ -41,6 +44,12 @@ def generate_launch_description():
     pose_yaw = LaunchConfiguration("pose_yaw")
 
     # Declare the launch actions
+    file_extension_action = DeclareLaunchArgument(
+        "file_extension",
+        default_value="urdf",
+        description="Extension of the model file"
+    )
+
     namespace_action = DeclareLaunchArgument(
         "namespace",
         default_value="",
@@ -106,6 +115,8 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     # Register launch actions for finding the model
+    ld.add_action(file_extension_action)
+    ld.add_action(namespace_action)
     ld.add_action(root_is_ros_package_action)
     ld.add_action(package_root_directory_action)
     ld.add_action(model_name_action)
