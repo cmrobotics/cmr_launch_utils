@@ -3,12 +3,15 @@ from launch.launch_context import LaunchContext
 from launch import Substitution
 from ament_index_python.packages import get_package_share_directory
 
+from launch.utilities import normalize_to_list_of_substitutions
+from launch.utilities import perform_substitutions
+
 
 class PackageShareDirectorySubstitution(Substitution):
     def __init__(self, package_name: Substitution) -> None:
         """Create a IfElseSubstitution."""
         super().__init__()
-        self.__package_name = package_name
+        self.__package_name = normalize_to_list_of_substitutions(package_name)
 
     @property
     def package_name(self) -> Substitution:
@@ -20,4 +23,6 @@ class PackageShareDirectorySubstitution(Substitution):
 
     def perform(self, context: LaunchContext) -> Text:
         """Perform the substitution."""
-        return get_package_share_directory(self.package_name.perform(context))
+        return get_package_share_directory(
+            perform_substitutions(context, self.package_name)
+        )
