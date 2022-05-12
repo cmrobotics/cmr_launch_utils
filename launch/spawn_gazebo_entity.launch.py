@@ -1,7 +1,10 @@
+from ament_index_python.packages import get_package_share_directory
+
 from launch import LaunchDescription
 from launch.conditions import IfCondition
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
 
@@ -42,6 +45,8 @@ def generate_launch_description():
     pose_x = LaunchConfiguration("pose_x")
     pose_y = LaunchConfiguration("pose_y")
     pose_yaw = LaunchConfiguration("pose_yaw")
+
+    namespace = LaunchConfiguration("namespace")
 
     # Declare the launch actions
     file_extension_action = DeclareLaunchArgument(
@@ -102,13 +107,23 @@ def generate_launch_description():
         arguments=[
             "-entity", entity_name,
             "-file", model_file,
-            "-robot_namespace", LaunchConfiguration("namespace", default=namespace_action.default_value),
+            "-robot_namespace", namespace,
             "-x", pose_x,
             "-y", pose_y,
-            "-z", "0.01",
+            "-z", "0.2",
             "-Y", pose_yaw
         ],
         output="screen",
+    )
+
+    state_publisher_action = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            [get_package_share_directory("serena_bringup"), "/launch/hardware/state_publisher.launch.py"]
+        ),
+        launch_arguments={
+            "namespace": namespace,
+            "urdf": model_file,
+        }.items(),
     )
 
     # Create launch description object
@@ -128,5 +143,6 @@ def generate_launch_description():
 
     # Launch actions to run things
     ld.add_action(spawn_entity_action)
+    ld.add_action(state_publisher_action)
 
     return ld
