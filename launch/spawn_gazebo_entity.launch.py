@@ -116,15 +116,6 @@ def generate_launch_description():
         output="screen",
     )
 
-    state_publisher_action = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            [get_package_share_directory("serena_bringup"), "/launch/hardware/state_publisher.launch.py"]
-        ),
-        launch_arguments={
-            "namespace": namespace,
-            "urdf": model_file,
-        }.items(),
-    )
 
     # Create launch description object
     ld = LaunchDescription()
@@ -143,6 +134,5 @@ def generate_launch_description():
 
     # Launch actions to run things
     ld.add_action(spawn_entity_action)
-    ld.add_action(state_publisher_action)
 
     return ld
