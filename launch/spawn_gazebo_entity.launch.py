@@ -37,11 +37,6 @@ def generate_launch_description():
         ]
     )
 
-    entity_name = LaunchConfiguration(
-        "entity_name",
-        default=model_name
-    )
-
     pose_x = LaunchConfiguration("pose_x")
     pose_y = LaunchConfiguration("pose_y")
     pose_yaw = LaunchConfiguration("pose_yaw")
@@ -77,10 +72,19 @@ def generate_launch_description():
         description="The name of the model such that the model description is found at \"root_is_ros_package\"/models/\"model_name\"/model.sdf"
     )
 
+
+    entity_name = LaunchConfiguration(
+        "entity_name",
+        default=TextFormatSubstitution(
+                fmt="{}/{}",
+                substitutions=[namespace, model_name]
+            )
+    )
+
     entity_name_action = DeclareLaunchArgument(
         "entity_name",
         description="Name given to the entity when spawning it in Gazebo; defaults to the model's name",
-        default_value=model_name
+        default_value=TextFormatSubstitution(fmt="{}/serena", substitutions=[namespace]),
     )
 
     x_arg_action = DeclareLaunchArgument(
