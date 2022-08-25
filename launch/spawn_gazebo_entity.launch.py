@@ -111,7 +111,8 @@ def generate_launch_description():
             "-x", pose_x,
             "-y", pose_y,
             "-z", "0.2",
-            "-Y", pose_yaw
+            "-Y", pose_yaw,
+            "-package_to_model"
         ],
         output="screen",
     )
