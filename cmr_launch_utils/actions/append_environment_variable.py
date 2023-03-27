@@ -36,7 +36,7 @@ from launch.utilities.type_utils import NormalizedValueType
 from launch.utilities.type_utils import perform_typed_substitution
 
 
-@expose_action('append_env')
+@expose_action('cmr_append_env')
 class AppendEnvironmentVariable(Action):
     """
     Action that appends to an environment variable if it exists and sets it if it does not.
